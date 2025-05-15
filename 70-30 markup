@@ -23,56 +23,60 @@
 
                     <Grid Grid.Column="1" MinWidth="10"/>
 
-                    <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-                        <StackPanel.Resources>
-                            <Style TargetType="Viewbox">
-                                <Setter Property="Stretch" Value="Uniform"/>
-                                <Setter Property="Margin" Value="5,0,0,0"/>
-                            </Style>
-                            <Style TargetType="StackPanel" x:Key="ButtonTextContainerStyle">
-                                <Setter Property="Orientation" Value="Vertical"/>
-                                <Setter Property="Width" Value="100"/>
-                            </Style>
-                            <Style TargetType="Button">
-                                <Setter Property="Height" Value="75"/>
-                            </Style>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="HorizontalAlignment" Value="Center"/>
-                                <Setter Property="Margin" Value="0,2,0,0"/>
-                            </Style>
-                        </StackPanel.Resources>
+                    <!-- ADDED THIS Viewbox to wrap the group of 5 right buttons -->
+                    <Viewbox Grid.Column="2" Stretch="Uniform" HorizontalAlignment="Right" VerticalAlignment="Center">
+                        <!-- MOVED THIS StackPanel INSIDE the new Viewbox -->
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                            <StackPanel.Resources>
+                                <Style TargetType="Viewbox">
+                                    <Setter Property="Stretch" Value="Uniform"/>
+                                    <Setter Property="Margin" Value="5,0,0,0"/>
+                                </Style>
+                                <Style TargetType="StackPanel" x:Key="ButtonTextContainerStyle">
+                                    <Setter Property="Orientation" Value="Vertical"/>
+                                    <Setter Property="Width" Value="100"/>
+                                </Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Height" Value="75"/>
+                                </Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                    <Setter Property="Margin" Value="0,2,0,0"/>
+                                </Style>
+                            </StackPanel.Resources>
 
-                        <Viewbox Margin="0">
-                            <StackPanel Style="{StaticResource ButtonTextContainerStyle}">
-                                <Button Content="R_Btn 1"/>
-                                <TextBlock Text="Label 1"/>
-                            </StackPanel>
-                        </Viewbox>
-                        <Viewbox>
-                            <StackPanel Style="{StaticResource ButtonTextContainerStyle}">
-                                <Button Content="R_Btn 2"/>
-                                <TextBlock Text="Label 2"/>
-                            </StackPanel>
-                        </Viewbox>
-                        <Viewbox>
-                            <StackPanel Style="{StaticResource ButtonTextContainerStyle}">
-                                <Button Content="R_Btn 3"/>
-                                <TextBlock Text="Label 3"/>
-                            </StackPanel>
-                        </Viewbox>
-                        <Viewbox>
-                            <StackPanel Style="{StaticResource ButtonTextContainerStyle}">
-                                <Button Content="R_Btn 4"/>
-                                <TextBlock Text="Label 4"/>
-                            </StackPanel>
-                        </Viewbox>
-                        <Viewbox>
-                            <StackPanel Style="{StaticResource ButtonTextContainerStyle}">
-                                <Button Content="R_Btn 5"/>
-                                <TextBlock Text="Label 5"/>
-                            </StackPanel>
-                        </Viewbox>
-                    </StackPanel>
+                            <Viewbox Margin="0"> <!-- First item has no left margin from style -->
+                                <StackPanel Style="{StaticResource ButtonTextContainerStyle}">
+                                    <Button Content="R_Btn 1"/>
+                                    <TextBlock Text="Label 1"/>
+                                </StackPanel>
+                            </Viewbox>
+                            <Viewbox>
+                                <StackPanel Style="{StaticResource ButtonTextContainerStyle}">
+                                    <Button Content="R_Btn 2"/>
+                                    <TextBlock Text="Label 2"/>
+                                </StackPanel>
+                            </Viewbox>
+                            <Viewbox>
+                                <StackPanel Style="{StaticResource ButtonTextContainerStyle}">
+                                    <Button Content="R_Btn 3"/>
+                                    <TextBlock Text="Label 3"/>
+                                </StackPanel>
+                            </Viewbox>
+                            <Viewbox>
+                                <StackPanel Style="{StaticResource ButtonTextContainerStyle}">
+                                    <Button Content="R_Btn 4"/>
+                                    <TextBlock Text="Label 4"/>
+                                </StackPanel>
+                            </Viewbox>
+                            <Viewbox>
+                                <StackPanel Style="{StaticResource ButtonTextContainerStyle}">
+                                    <Button Content="R_Btn 5"/>
+                                    <TextBlock Text="Label 5"/>
+                                </StackPanel>
+                            </Viewbox>
+                        </StackPanel>
+                    </Viewbox>
                 </Grid>
             </Border>
 
