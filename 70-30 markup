@@ -1,37 +1,30 @@
-<Grid Grid.Row="3">
+<Grid>
     <Grid.ColumnDefinitions>
-        <ColumnDefinition Width="7*" />
-        <ColumnDefinition Width="3*" />
+        <ColumnDefinition Width="7*"/>
+        <ColumnDefinition Width="3*"/>
     </Grid.ColumnDefinitions>
-
-    <!-- 70% Side -->
-    <Viewbox Grid.Column="0" Stretch="Uniform" HorizontalAlignment="Stretch" VerticalAlignment="Center">
-        <!-- Removed MinWidth from this Grid to allow the '*' column to shrink first -->
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>   <!-- Left button -->
-                <ColumnDefinition Width="*"/>      <!-- Spacer -->
-                <ColumnDefinition Width="Auto"/>   <!-- Right button group -->
-            </Grid.ColumnDefinitions>
-
-            <!-- Left Button -->
-            <!-- You could add MinWidth here if desired for proportion consistency -->
-            <Button Grid.Column="0" Content="Left Action" Padding="10,5" Margin="2" />
-
-            <!-- Right Button Set -->
-            <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
-                <!-- You could add MinWidth to these buttons as well -->
-                <Button Content="R_Btn 1" Padding="10,5" Margin="2" />
-                <Button Content="R_Btn 2" Padding="10,5" Margin="2" />
-                <Button Content="R_Btn 3" Padding="10,5" Margin="2" />
-                <Button Content="R_Btn 4" Padding="10,5" Margin="2" />
-                <Button Content="R_Btn 5" Padding="10,5" Margin="2" />
-            </StackPanel>
-        </Grid>
-    </Viewbox>
-
-    <!-- 30% Side -->
-    <Slider Grid.Column="1" VerticalAlignment="Center"
-            Minimum="0" Maximum="100" Value="50"
-            MinWidth="80" />
+    
+    <Grid Grid.Column="0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        
+        <Button Grid.Column="0" Content="Left Button" 
+                HorizontalAlignment="Left" VerticalAlignment="Center"
+                Margin="5"/>
+        
+        <StackPanel Grid.Column="2" Orientation="Horizontal" 
+                    HorizontalAlignment="Right" VerticalAlignment="Center">
+            <Button Content="Right Button 1" Margin="2"/>
+            <Button Content="Right Button 2" Margin="2"/>
+            <Button Content="Right Button 3" Margin="2"/>
+            <Button Content="Right Button 4" Margin="2"/>
+            <Button Content="Right Button 5" Margin="2"/>
+        </StackPanel>
+    </Grid>
+    
+    <Slider Grid.Column="1" VerticalAlignment="Center" Margin="10,0"
+            MinWidth="100"/>
 </Grid>
