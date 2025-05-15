@@ -9,9 +9,9 @@ namespace YourNamespace
     public partial class MainWindow : Window
     {
         private DispatcherTimer _timer;
-        private TimeSpan _currentTime;
         private TimeSpan _totalTime;
-        private int _lastDisplayedSeconds; // Stores the integer part of seconds last shown in TimeDisplay
+        private DateTime _countdownStartTime; // Tracks when the current countdown cycle started
+        private int _lastDisplayedSeconds;
 
         private int _batteryState = 0;
         private readonly Color[] _batteryColors = { Colors.Red, Colors.Yellow, Colors.Green };
@@ -35,64 +35,49 @@ namespace YourNamespace
         private void InitProgressAnimation()
         {
             _totalTime = TimeSpan.FromSeconds(5);
-            _currentTime = _totalTime;
-
-            // Initial setup of display before timer starts
-            _lastDisplayedSeconds = (int)Math.Ceiling(_currentTime.TotalSeconds);
+            // Start the first countdown cycle
+            _countdownStartTime = DateTime.UtcNow;
+            TimeSpan initialRemaining = _totalTime - (DateTime.UtcNow - _countdownStartTime);
+            _lastDisplayedSeconds = (int)Math.Ceiling(initialRemaining.TotalSeconds);
             TimeDisplay.Text = TimeSpan.FromSeconds(_lastDisplayedSeconds).ToString(@"hh\:mm\:ss");
-            UpdateProgressBar(0); // Progress is 0% at the start
+            UpdateProgressBar(0); // Progress is 0% at the very start
 
             _timer = new DispatcherTimer
             {
-                Interval = TimeSpan.FromMilliseconds(50) // Tick frequently for smooth animation
+                Interval = TimeSpan.FromMilliseconds(20) // Tick frequently for smooth animation, 20-50ms is good
             };
 
             _timer.Tick += (s, e) =>
             {
-                TimeSpan timeAtTickStart = _currentTime; // Capture time at the beginning of this tick's logic
+                TimeSpan elapsedSinceCycleStart = DateTime.UtcNow - _countdownStartTime;
+                TimeSpan currentTimeRemaining = _totalTime - elapsedSinceCycleStart;
 
-                // If _currentTime was zero at the start of this tick, reset to _totalTime for a new cycle
-                if (timeAtTickStart == TimeSpan.Zero)
+                if (currentTimeRemaining.TotalMilliseconds <= 0)
                 {
-                    _currentTime = _totalTime;
+                    currentTimeRemaining = TimeSpan.Zero; // Clamp at zero
+
+                    TimeDisplay.Text = "00:00:00";
+                    UpdateProgressBar(100); // Ensure it hits 100%
+
+                    // Reset for the next cycle
+                    _countdownStartTime = DateTime.UtcNow;
+                    // The next tick will naturally pick up the new start time
+                    // and display _totalTime, and reset progress bar.
+                    _lastDisplayedSeconds = (int)Math.Ceiling(_totalTime.TotalSeconds); // Prepare for next cycle's first display
                 }
-
-                _currentTime = _currentTime.Subtract(_timer.Interval); // Decrement current time
-
-                bool justReachedZero = false;
-                if (_currentTime.TotalMilliseconds < 0) // Check if time has run out
+                else
                 {
-                    _currentTime = TimeSpan.Zero; // Clamp to zero
-                    // Check if it transitioned from positive to zero in this exact tick
-                    if (timeAtTickStart > TimeSpan.Zero)
+                    // Calculate progress based on actual elapsed time
+                    double progress = (elapsedSinceCycleStart.TotalMilliseconds / _totalTime.TotalMilliseconds) * 100.0;
+                    progress = Math.Max(0, Math.Min(100, progress)); // Clamp progress between 0 and 100
+                    UpdateProgressBar(progress);
+
+                    int secondsToDisplay = (int)Math.Ceiling(currentTimeRemaining.TotalSeconds);
+                    if (_lastDisplayedSeconds != secondsToDisplay)
                     {
-                        justReachedZero = true;
+                        TimeDisplay.Text = TimeSpan.FromSeconds(secondsToDisplay).ToString(@"hh\:mm\:ss");
+                        _lastDisplayedSeconds = secondsToDisplay;
                     }
-                }
-
-                // Calculate progress
-                double elapsedRatio = 0.0;
-                if (_totalTime.TotalMilliseconds > 0) // Avoid division by zero if _totalTime is zero
-                {
-                    elapsedRatio = (_totalTime.TotalMilliseconds - _currentTime.TotalMilliseconds) / _totalTime.TotalMilliseconds;
-                }
-                elapsedRatio = Math.Max(0.0, Math.Min(1.0, elapsedRatio)); // Clamp ratio to [0,1]
-
-                double progress = elapsedRatio * 100.0;
-                UpdateProgressBar(progress);
-
-                // Determine the seconds value to display
-                int secondsToDisplay = (int)Math.Ceiling(_currentTime.TotalSeconds); // Use ceiling for countdown effect
-                if (_currentTime == TimeSpan.Zero) // Always display "0" when time is exactly zero
-                {
-                    secondsToDisplay = 0;
-                }
-
-                // Update the time display text if necessary
-                if (_lastDisplayedSeconds != secondsToDisplay || justReachedZero || timeAtTickStart == TimeSpan.Zero)
-                {
-                    TimeDisplay.Text = TimeSpan.FromSeconds(secondsToDisplay).ToString(@"hh\:mm\:ss");
-                    _lastDisplayedSeconds = secondsToDisplay;
                 }
             };
             _timer.Start();
@@ -102,7 +87,7 @@ namespace YourNamespace
         {
             if (ProgressBackground.ActualWidth > 0)
             {
-                ProgressIndicator.Width = progress * ProgressBackground.ActualWidth / 100;
+                ProgressIndicator.Width = progress * ProgressBackground.ActualWidth / 100.0;
                 ProgressText.Text = $"{Math.Round(progress)}%";
             }
         }
@@ -116,7 +101,6 @@ namespace YourNamespace
             _batteryTimer.Tick += (s, e) =>
             {
                 _batteryState = (_batteryState + 1) % 3;
-
                 double containerHeight = BatteryContainer.ActualHeight;
 
                 Storyboard colorStoryboard = new Storyboard();
