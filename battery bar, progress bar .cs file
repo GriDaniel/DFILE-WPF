@@ -36,26 +36,55 @@ namespace YourNamespace
             _totalTime = TimeSpan.FromSeconds(5);
             _currentTime = _totalTime;
             
+            // Update timer more frequently (50ms) for smoother animation
+            // but keep the countdown logic in seconds
             _timer = new DispatcherTimer {
-                Interval = TimeSpan.FromMilliseconds(100)
+                Interval = TimeSpan.FromMilliseconds(50)
             };
             _timer.Tick += (s, e) => {
-                _currentTime = _currentTime.Subtract(TimeSpan.FromMilliseconds(100));
+                // Decrease time by the interval amount
+                _currentTime = _currentTime.Subtract(_timer.Interval);
                 
                 if (_currentTime.TotalMilliseconds <= 0)
-                    _currentTime = _totalTime;
-                
-                TimeDisplay.Text = _currentTime.ToString(@"hh\:mm\:ss");
-                
-                // Convert time to progress percentage
-                double progress = 100 - (_currentTime.TotalMilliseconds / _totalTime.TotalMilliseconds * 100);
-                if (ProgressBackground.ActualWidth > 0)
                 {
-                    ProgressIndicator.Width = progress * ProgressBackground.ActualWidth / 100;
-                    ProgressText.Text = $"{Math.Round(progress)}%";
+                    // When we reach zero, update UI one last time at exactly 100%
+                    TimeDisplay.Text = "00:00:00";
+                    UpdateProgressBar(100);
+                    
+                    // Then reset after a slight delay for visual feedback
+                    _currentTime = _totalTime;
+                    
+                    // Only update the time display less frequently (once per second)
+                    // to avoid distracting flicker
+                    TimeDisplay.Text = _currentTime.ToString(@"hh\:mm\:ss");
+                }
+                else
+                {
+                    // Calculate the exact percentage of progress
+                    double elapsedRatio = 1 - (_currentTime.TotalMilliseconds / _totalTime.TotalMilliseconds);
+                    double progress = elapsedRatio * 100;
+                    
+                    // Only update the time display when seconds change
+                    TimeSpan prevTime = _currentTime.Add(_timer.Interval);
+                    if (prevTime.Seconds != _currentTime.Seconds)
+                    {
+                        TimeDisplay.Text = _currentTime.ToString(@"hh\:mm\:ss");
+                    }
+                    
+                    // Always update the progress bar for smooth animation
+                    UpdateProgressBar(progress);
                 }
             };
             _timer.Start();
+        }
+        
+        private void UpdateProgressBar(double progress)
+        {
+            if (ProgressBackground.ActualWidth > 0)
+            {
+                ProgressIndicator.Width = progress * ProgressBackground.ActualWidth / 100;
+                ProgressText.Text = $"{Math.Round(progress)}%";
+            }
         }
         
         private void InitBatteryAnimation()
