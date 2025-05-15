@@ -9,7 +9,7 @@ namespace YourNamespace
     public partial class MainWindow : Window
     {
         private DispatcherTimer _timer;
-        private TimeSpan _currentTime;
+        private DateTime _startTime; // Track start time for precise elapsed time
         private TimeSpan _totalTime;
         
         private int _batteryState = 0;
@@ -33,31 +33,32 @@ namespace YourNamespace
         private void InitProgressAnimation()
         {
             _totalTime = TimeSpan.FromSeconds(5);
-            _currentTime = _totalTime;
+            _startTime = DateTime.Now; // Initialize start time
             
-            // 50ms interval for smooth progress bar animation
-            _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(50) };
+            // 20ms interval for smooth progress bar animation
+            _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(20) };
             _timer.Tick += (s, e) => {
-                _currentTime = _currentTime.Subtract(_timer.Interval);
+                TimeSpan elapsed = DateTime.Now - _startTime;
                 
-                if (_currentTime.TotalMilliseconds <= 0)
+                if (elapsed >= _totalTime)
                 {
                     TimeDisplay.Text = "00:00:00";
                     UpdateProgressBar(100);
-                    _currentTime = _totalTime;
-                    TimeDisplay.Text = _currentTime.ToString(@"hh\:mm\:ss");
+                    _startTime = DateTime.Now; // Reset start time
+                    TimeDisplay.Text = _totalTime.ToString(@"hh\:mm\:ss");
                     UpdateProgressBar(0);
                 }
                 else
                 {
-                    double elapsedRatio = 1 - (_currentTime.TotalMilliseconds / _totalTime.TotalMilliseconds);
-                    double progress = elapsedRatio * 100;
+                    double progress = (elapsed.TotalMilliseconds / _totalTime.TotalMilliseconds) * 100;
+                    progress = Math.Min(progress, 100); // Cap at 100%
                     
                     // Update time display only when seconds change
-                    TimeSpan prevTime = _currentTime.Add(_timer.Interval);
-                    if (prevTime.Seconds != _currentTime.Seconds)
+                    TimeSpan remaining = _totalTime - elapsed;
+                    TimeSpan prevRemaining = remaining + _timer.Interval;
+                    if (prevRemaining.Seconds != remaining.Seconds)
                     {
-                        TimeDisplay.Text = _currentTime.ToString(@"hh\:mm\:ss");
+                        TimeDisplay.Text = remaining.ToString(@"hh\:mm\:ss");
                     }
                     
                     UpdateProgressBar(progress);
