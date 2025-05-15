@@ -1,7 +1,7 @@
 <Grid>
     <Grid.RowDefinitions>
         <RowDefinition Height="Auto"/>
-        <RowDefinition Height="Auto"/>
+        <RowDefinition Height="75"/>
         <RowDefinition Height="*"/>
     </Grid.RowDefinitions>
 
@@ -91,11 +91,11 @@
         </Grid>
     </Border>
 
-    <Border Grid.Row="1" BorderBrush="DarkOrange" BorderThickness="1" VerticalAlignment="Top">
+    <Border Grid.Row="1" BorderBrush="DarkCyan" BorderThickness="1" VerticalAlignment="Top">
         <Grid x:Name="DownloadRowContainer" Height="75">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto" MinWidth="150"/>
+                <ColumnDefinition Width="Auto" MinWidth="180"/>
             </Grid.ColumnDefinitions>
 
             <Grid Grid.Column="0" Margin="5,0,0,0" VerticalAlignment="Center">
@@ -104,7 +104,7 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <ProgressBar Grid.Column="0" x:Name="MainProgressBar" Height="25" MinWidth="200" Value="60" VerticalAlignment="Center"/>
-                <TextBlock Grid.Column="1" x:Name="TimeRemainingText" Text="00:35 left" VerticalAlignment="Center" Margin="10,0,10,0"/>
+                <TextBlock Grid.Column="1" x:Name="TimeRemainingText" Text="00:35 left" VerticalAlignment="Center" Margin="10,0,10,0" FontFamily="Consolas"/>
             </Grid>
 
             <StackPanel Grid.Column="1" Orientation="Vertical" VerticalAlignment="Center" Margin="10,0,10,0">
