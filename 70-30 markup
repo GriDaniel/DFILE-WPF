@@ -1,98 +1,30 @@
- <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/> <!-- Placeholder for other content -->
-            <RowDefinition Height="Auto"/> <!-- Placeholder for other content -->
-            <RowDefinition Height="Auto"/> <!-- Placeholder for other content -->
-            <RowDefinition Height="*"/>    <!-- This is where our target Grid will go -->
-            <RowDefinition Height="Auto"/> <!-- Placeholder for other content -->
-        </Grid.RowDefinitions>
+<Grid Grid.Row="3">
+    <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="7*" />
+        <ColumnDefinition Width="3*" />
+    </Grid.ColumnDefinitions>
 
-        <!-- Helper Text to understand context -->
-        <TextBlock Grid.Row="0" Text="Content in Row 0" Margin="10" HorizontalAlignment="Center"/>
-        <TextBlock Grid.Row="1" Text="Content in Row 1" Margin="10" HorizontalAlignment="Center"/>
-        <TextBlock Grid.Row="2" Text="Content in Row 2" Margin="10" HorizontalAlignment="Center"/>
-        <TextBlock Grid.Row="4" Text="Content in Row 4 (e.g., Status Bar)" Margin="10" HorizontalAlignment="Center"/>
-
-
-        <!-- 🔹 Parent Container -->
-        <!-- Located in Grid.Row="3" of the main window layout. -->
-        <!-- Stretches 100% of the window’s width (default for Grid children). -->
-        <!-- Has a defined MinHeight, and should attempt to display content responsively if the window height drops below this. -->
-        <Grid Grid.Row="3" MinHeight="150" Background="#FFE0E0E0">
+    <Viewbox Grid.Column="0" Stretch="Uniform" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+        <Grid MinWidth="450">
             <Grid.ColumnDefinitions>
-                <!-- 🔹 Internal Layout: Two Horizontal Panels (70% / 30%) -->
-                <ColumnDefinition Width="7*" MinWidth="350"/> <!-- Left Container: 70%, with MinWidth -->
-                <ColumnDefinition Width="3*" MinWidth="200"/> <!-- Right Container: 30%, with MinWidth -->
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <!-- Both containers should always stretch to match the full height of the parent grid (default for Grid children). -->
+            <Button Grid.Column="0" Content="Left Action" Padding="10,5" Margin="2"/>
 
-            <!-- 🔸 Left Container (70%) -->
-            <!-- If resized below its MinWidth, it scales its internal content using a Viewbox rather than clipping or hiding elements. -->
-            <Border Grid.Column="0" BorderBrush="DarkCyan" BorderThickness="1" Margin="5" Padding="5">
-                <Viewbox Stretch="Uniform" StretchDirection="Both">
-                    <!-- The content inside the Viewbox has its own MinWidth.
-                         When the available space for the Viewbox is less than this MinWidth, scaling begins.
-                         The MinWidth on the ColumnDefinition above (350) is for the column itself,
-                         this MinWidth (e.g., 480) is for the content that gets scaled.
-                         Make this MinWidth large enough to comfortably fit buttons before scaling. -->
-                    <DockPanel MinWidth="480" MinHeight="80" LastChildFill="True" Background="#FFF0F0F0">
-                        <!-- 1 button aligned to the left edge. -->
-                        <Button Content="Left Action"
-                                DockPanel.Dock="Left"
-                                VerticalAlignment="Center"
-                                Padding="10,5" Margin="5"/>
-
-                        <!-- 5 buttons aligned to the right edge, evenly spaced between them. -->
-                        <!-- UniformGrid is perfect for evenly spacing items. -->
-                        <UniformGrid Rows="1" Columns="5"
-                                     DockPanel.Dock="Right"
-                                     HorizontalAlignment="Right"
-                                     VerticalAlignment="Center"
-                                     Margin="5">
-                            <Button Content="R1" Padding="5" Margin="2"/>
-                            <Button Content="R2" Padding="5" Margin="2"/>
-                            <Button Content="R3" Padding="5" Margin="2"/>
-                            <Button Content="R4" Padding="5" Margin="2"/>
-                            <Button Content="R5" Padding="5" Margin="2"/>
-                        </UniformGrid>
-
-                        <!-- Behavior:
-                             Initially, the layout shows whitespace between the two button groups.
-                             As the container narrows: The whitespace reduces.
-                             Once the whitespace between left/right groups is fully consumed, all 6 buttons become evenly spaced.
-                                (Note: The 5 right buttons will be evenly spaced within their group. The left button will be adjacent.
-                                 "All 6 become evenly spaced" is interpreted as the groups meeting and then the whole unit scaling.)
-                             Further shrinking of width or height causes the buttons to shrink proportionally using Viewbox scaling.
-
-                             This Grid acts as the shrinking whitespace.
-                             DockPanel.LastChildFill="True" ensures this element takes remaining space.
-                        -->
-                        <Grid Background="Transparent" Name="ButtonSpacer"/>
-                    </DockPanel>
-                </Viewbox>
-            </Border>
-
-            <!-- 🔸 Right Container (30%) -->
-            <!-- Maintains its MinWidth and does not shrink further under pressure. (This is handled by ColumnDefinition's MinWidth) -->
-            <Border Grid.Column="1" BorderBrush="DarkGoldenrod" BorderThickness="1" Margin="5" Padding="5">
-                <!-- Use layout containers that maintain center alignment of the title and slider. -->
-                <!-- A StackPanel can center its children if its HorizontalAlignment is Center.
-                     However, we want the Slider to expand. So, we make the StackPanel stretch
-                     and then center its individual children that need centering. -->
-                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Stretch" Background="#FFFFF0E1">
-                    <!-- A centered text label "Speed Override" above a WPF <Slider>. -->
-                    <Label Content="Speed Override"
-                           HorizontalAlignment="Center"
-                           FontWeight="Bold" Margin="0,0,0,5"/>
-
-                    <!-- The slider should expand to the full width of this container. -->
-                    <Slider Minimum="0" Maximum="100" Value="50"
-                            HorizontalAlignment="Stretch"
-                            Margin="10,0"
-                            IsSnapToTickEnabled="True" TickFrequency="10" TickPlacement="BottomRight"/>
-                </StackPanel>
-            </Border>
-
+            <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="R_Btn 1" Padding="10,5" Margin="2"/>
+                <Button Content="R_Btn 2" Padding="10,5" Margin="2"/>
+                <Button Content="R_Btn 3" Padding="10,5" Margin="2"/>
+                <Button Content="R_Btn 4" Padding="10,5" Margin="2"/>
+                <Button Content="R_Btn 5" Padding="10,5" Margin="2"/>
+            </StackPanel>
         </Grid>
-    </Grid>
+    </Viewbox>
+
+    <Slider Grid.Column="1" VerticalAlignment="Center"
+            Minimum="0" Maximum="100" Value="50"
+            MinWidth="80" />
+</Grid>
