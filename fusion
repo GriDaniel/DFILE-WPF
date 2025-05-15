@@ -1,0 +1,117 @@
+<Grid>
+    <Grid.RowDefinitions>
+        <RowDefinition Height="Auto"/>
+        <RowDefinition Height="Auto"/>
+        <RowDefinition Height="*"/>
+    </Grid.RowDefinitions>
+
+    <Border Grid.Row="0" BorderBrush="Gray" BorderThickness="1" VerticalAlignment="Top">
+        <Grid x:Name="MainRowContainer" Height="Auto" MinHeight="40" MaxHeight="90" VerticalAlignment="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="7*" />
+                <ColumnDefinition Width="3*" MinWidth="200" />
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0" BorderBrush="LightBlue" BorderThickness="1" Padding="5">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Viewbox Grid.Column="0" Stretch="Uniform" HorizontalAlignment="Left" VerticalAlignment="Center">
+                        <StackPanel Orientation="Vertical" Width="100">
+                            <Button Content="L_Btn 1" Height="75" />
+                            <TextBlock Text="Left Label 1" HorizontalAlignment="Center" Margin="0,2,0,0"/>
+                        </StackPanel>
+                    </Viewbox>
+
+                    <Grid Grid.Column="1" MinWidth="10"/>
+
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                        <StackPanel.Resources>
+                            <Style TargetType="Viewbox">
+                                <Setter Property="Stretch" Value="Uniform"/>
+                                <Setter Property="Margin" Value="5,0,0,0"/>
+                            </Style>
+                            <Style TargetType="StackPanel" x:Key="ButtonTextContainerStyle">
+                                <Setter Property="Orientation" Value="Vertical"/>
+                                <Setter Property="Width" Value="100"/>
+                            </Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Height" Value="75"/>
+                            </Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                <Setter Property="Margin" Value="0,2,0,0"/>
+                            </Style>
+                        </StackPanel.Resources>
+
+                        <Viewbox Margin="0">
+                            <StackPanel Style="{StaticResource ButtonTextContainerStyle}">
+                                <Button Content="R_Btn 1"/>
+                                <TextBlock Text="Label 1"/>
+                            </StackPanel>
+                        </Viewbox>
+                        <Viewbox>
+                            <StackPanel Style="{StaticResource ButtonTextContainerStyle}">
+                                <Button Content="R_Btn 2"/>
+                                <TextBlock Text="Label 2"/>
+                            </StackPanel>
+                        </Viewbox>
+                        <Viewbox>
+                            <StackPanel Style="{StaticResource ButtonTextContainerStyle}">
+                                <Button Content="R_Btn 3"/>
+                                <TextBlock Text="Label 3"/>
+                            </StackPanel>
+                        </Viewbox>
+                        <Viewbox>
+                            <StackPanel Style="{StaticResource ButtonTextContainerStyle}">
+                                <Button Content="R_Btn 4"/>
+                                <TextBlock Text="Label 4"/>
+                            </StackPanel>
+                        </Viewbox>
+                        <Viewbox>
+                            <StackPanel Style="{StaticResource ButtonTextContainerStyle}">
+                                <Button Content="R_Btn 5"/>
+                                <TextBlock Text="Label 5"/>
+                            </StackPanel>
+                        </Viewbox>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <Border Grid.Column="1" BorderBrush="LightGreen" BorderThickness="1" Padding="5">
+                <StackPanel VerticalAlignment="Center" MinHeight="40">
+                    <TextBlock Text="Slider Title" HorizontalAlignment="Center" Margin="0,0,0,5"/>
+                    <Slider Minimum="0" Maximum="100" Value="50" MinWidth="190" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Border>
+
+    <Border Grid.Row="1" BorderBrush="DarkOrange" BorderThickness="1" VerticalAlignment="Top">
+        <Grid x:Name="DownloadRowContainer" Height="75">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto" MinWidth="150"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0" Margin="5,0,0,0" VerticalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <ProgressBar Grid.Column="0" x:Name="MainProgressBar" Height="25" MinWidth="200" Value="60" VerticalAlignment="Center"/>
+                <TextBlock Grid.Column="1" x:Name="TimeRemainingText" Text="00:35 left" VerticalAlignment="Center" Margin="10,0,10,0"/>
+            </Grid>
+
+            <StackPanel Grid.Column="1" Orientation="Vertical" VerticalAlignment="Center" Margin="10,0,10,0">
+                <TextBlock x:Name="FileNameText" Text="Downloading_very_long_file_name_example.zip" TextTrimming="CharacterEllipsis" ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}" FontWeight="SemiBold"/>
+                <TextBlock x:Name="ProgressText" Text="60% (60.0 MB / 100.0 MB)" Margin="0,2,0,2" FontSize="10"/>
+                <Button x:Name="CancelButton" Content="Cancel Download" HorizontalAlignment="Stretch" Padding="5,2" Margin="0,3,0,0"/>
+            </StackPanel>
+        </Grid>
+    </Border>
+</Grid>
