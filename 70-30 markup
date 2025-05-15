@@ -1,25 +1,46 @@
 <Grid>
-<Grid.ColumnDefinitions>
-<ColumnDefinition Width="0.7*" />
-<ColumnDefinition Width="0.3*" />
-</Grid.ColumnDefinitions>
-<Grid Grid.Column="0">
     <Grid.ColumnDefinitions>
-        <ColumnDefinition Width="Auto" />
-        <ColumnDefinition Width="*" />
-        <ColumnDefinition Width="Auto" />
+        <ColumnDefinition Width="7*"/>
+        <ColumnDefinition Width="3*"/>
     </Grid.ColumnDefinitions>
-
-    <Button Grid.Column="0" Content="Left Button" Padding="10,5" HorizontalAlignment="Left"/>
-
-    <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
-        <Button Content="Right 1" Padding="10,5"/>
-        <Button Content="Right 2" Padding="10,5"/>
-        <Button Content="Right 3" Padding="10,5"/>
-        <Button Content="Right 4" Padding="10,5"/>
-        <Button Content="Right 5" Padding="10,5"/>
-    </StackPanel>
-</Grid>
-
-<Slider Grid.Column="1" VerticalAlignment="Center" MinWidth="80" />
+    
+    <Grid Grid.Column="0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        
+        <!-- Define shared button size group for uniform sizing -->
+        <Grid.Resources>
+            <Style TargetType="Button">
+                <Setter Property="Margin" Value="2"/>
+                <Setter Property="Padding" Value="10,5"/>
+                <!-- Use shared size group for all buttons -->
+                <Setter Property="Width" Value="Auto"/>
+            </Style>
+        </Grid.Resources>
+        
+        <!-- Enable shared size scope for the grid -->
+        <Grid.IsSharedSizeScope>True</Grid.IsSharedSizeScope>
+        
+        <!-- Uniform scaling container for left button -->
+        <Viewbox Grid.Column="0" Stretch="Uniform" StretchDirection="DownOnly">
+            <Button Content="Left Button"/>
+        </Viewbox>
+        
+        <!-- Uniform scaling container for right buttons -->
+        <Viewbox Grid.Column="2" Stretch="Uniform" StretchDirection="DownOnly">
+            <StackPanel Orientation="Horizontal">
+                <Button Content="Right Button 1"/>
+                <Button Content="Right Button 2"/>
+                <Button Content="Right Button 3"/>
+                <Button Content="Right Button 4"/>
+                <Button Content="Right Button 5"/>
+            </StackPanel>
+        </Viewbox>
+    </Grid>
+    
+    <Slider Grid.Column="1" VerticalAlignment="Center" Margin="10,0"
+            MinWidth="100"/>
 </Grid>
