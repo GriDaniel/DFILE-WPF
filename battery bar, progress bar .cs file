@@ -32,46 +32,34 @@ namespace YourNamespace
         
         private void InitProgressAnimation()
         {
-            // 5-second countdown timer
             _totalTime = TimeSpan.FromSeconds(5);
             _currentTime = _totalTime;
             
-            // Update timer more frequently (50ms) for smoother animation
-            // but keep the countdown logic in seconds
-            _timer = new DispatcherTimer {
-                Interval = TimeSpan.FromMilliseconds(50)
-            };
+            // 50ms interval for smooth progress bar animation
+            _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(50) };
             _timer.Tick += (s, e) => {
-                // Decrease time by the interval amount
                 _currentTime = _currentTime.Subtract(_timer.Interval);
                 
                 if (_currentTime.TotalMilliseconds <= 0)
                 {
-                    // When we reach zero, update UI one last time at exactly 100%
                     TimeDisplay.Text = "00:00:00";
                     UpdateProgressBar(100);
-                    
-                    // Then reset after a slight delay for visual feedback
                     _currentTime = _totalTime;
-                    
-                    // Only update the time display less frequently (once per second)
-                    // to avoid distracting flicker
                     TimeDisplay.Text = _currentTime.ToString(@"hh\:mm\:ss");
+                    UpdateProgressBar(0);
                 }
                 else
                 {
-                    // Calculate the exact percentage of progress
                     double elapsedRatio = 1 - (_currentTime.TotalMilliseconds / _totalTime.TotalMilliseconds);
                     double progress = elapsedRatio * 100;
                     
-                    // Only update the time display when seconds change
+                    // Update time display only when seconds change
                     TimeSpan prevTime = _currentTime.Add(_timer.Interval);
                     if (prevTime.Seconds != _currentTime.Seconds)
                     {
                         TimeDisplay.Text = _currentTime.ToString(@"hh\:mm\:ss");
                     }
                     
-                    // Always update the progress bar for smooth animation
                     UpdateProgressBar(progress);
                 }
             };
@@ -89,28 +77,32 @@ namespace YourNamespace
         
         private void InitBatteryAnimation()
         {
-            _batteryTimer = new DispatcherTimer {
-                Interval = TimeSpan.FromSeconds(2)
-            };
+            _batteryTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(2) };
             _batteryTimer.Tick += (s, e) => {
-                // Cycle through 3 states: red/low, yellow/medium, green/high
                 _batteryState = (_batteryState + 1) % 3;
                 
                 double containerHeight = BatteryContainer.ActualHeight;
                 
-                // Animate the battery bar color
-                Storyboard colorStoryboard = new Storyboard();
+                Storyboard storyboard = new Storyboard();
+                
                 ColorAnimation colorAnim = new ColorAnimation {
                     To = _batteryColors[_batteryState],
                     Duration = TimeSpan.FromSeconds(0.5)
                 };
                 Storyboard.SetTarget(colorAnim, BatteryBar);
                 Storyboard.SetTargetProperty(colorAnim, new PropertyPath("(Shape.Fill).(SolidColorBrush.Color)"));
-                colorStoryboard.Children.Add(colorAnim);
-                colorStoryboard.Begin(this);
+                storyboard.Children.Add(colorAnim);
                 
-                // Direct height change (can't animate Rectangle.Height property)
-                BatteryBar.Height = containerHeight * _batteryHeights[_batteryState];
+                // Animate height for smoother battery transition
+                DoubleAnimation heightAnim = new DoubleAnimation {
+                    To = containerHeight * _batteryHeights[_batteryState],
+                    Duration = TimeSpan.FromSeconds(0.5)
+                };
+                Storyboard.SetTarget(heightAnim, BatteryBar);
+                Storyboard.SetTargetProperty(heightAnim, new PropertyPath("Height"));
+                storyboard.Children.Add(heightAnim);
+                
+                storyboard.Begin(this);
             };
             _batteryTimer.Start();
         }
