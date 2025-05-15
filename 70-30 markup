@@ -3,22 +3,70 @@
         <ColumnDefinition Width="7*" />
         <ColumnDefinition Width="3*" />
     </Grid.ColumnDefinitions>
-    <Grid Grid.Column="0" Grid.IsSharedSizeScope="True"> <---- Added IsSharedSizeScope
+    <Grid Grid.Column="0" Grid.IsSharedSizeScope="True">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition SharedSizeGroup="ButtonGroup" Width="Auto"/> <--- Width="Auto" is better with SharedSizeGroup
-            <ColumnDefinition Width="*" MinWidth="10"/> <--- Spacer, with a MinWidth to ensure some space
+            <ColumnDefinition SharedSizeGroup="ButtonGroup" Width="Auto"/>
+            <ColumnDefinition Width="*" MinWidth="10"/>
             <ColumnDefinition SharedSizeGroup="ButtonGroup" Width="Auto"/>
             <ColumnDefinition SharedSizeGroup="ButtonGroup" Width="Auto"/>
             <ColumnDefinition SharedSizeGroup="ButtonGroup" Width="Auto"/>
             <ColumnDefinition SharedSizeGroup="ButtonGroup" Width="Auto"/>
             <ColumnDefinition SharedSizeGroup="ButtonGroup" Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <Button Grid.Column="0" Content="Left"   VerticalAlignment="Stretch" MinWidth="80"/> <--- Added MinWidth
-        <Button Grid.Column="2" Content="Right1" VerticalAlignment="Stretch" MinWidth="80"/> <--- Added MinWidth
-        <Button Grid.Column="3" Content="Right2" VerticalAlignment="Stretch" MinWidth="80"/> <--- Added MinWidth
-        <Button Grid.Column="4" Content="Right3" VerticalAlignment="Stretch" MinWidth="80"/> <--- Added MinWidth
-        <Button Grid.Column="5" Content="Right4" VerticalAlignment="Stretch" MinWidth="80"/> <--- Added MinWidth
-        <Button Grid.Column="6" Content="Right5" VerticalAlignment="Stretch" MinWidth="80"/> <--- Added MinWidth
+
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Button Grid.Row="0" Content="Left" VerticalAlignment="Stretch" MinWidth="80"/>
+            <TextBlock Grid.Row="1" Text="Text for Left" HorizontalAlignment="Center" Margin="0,2,0,0"/>
+        </Grid>
+
+        <Grid Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Button Grid.Row="0" Content="Right1" VerticalAlignment="Stretch" MinWidth="80"/>
+            <TextBlock Grid.Row="1" Text="Text for Right1" HorizontalAlignment="Center" Margin="0,2,0,0"/>
+        </Grid>
+
+        <Grid Grid.Column="3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Button Grid.Row="0" Content="Right2" VerticalAlignment="Stretch" MinWidth="80"/>
+            <TextBlock Grid.Row="1" Text="Text for Right2" HorizontalAlignment="Center" Margin="0,2,0,0"/>
+        </Grid>
+
+        <Grid Grid.Column="4">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Button Grid.Row="0" Content="Right3" VerticalAlignment="Stretch" MinWidth="80"/>
+            <TextBlock Grid.Row="1" Text="Text for Right3" HorizontalAlignment="Center" Margin="0,2,0,0"/>
+        </Grid>
+
+        <Grid Grid.Column="5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Button Grid.Row="0" Content="Right4" VerticalAlignment="Stretch" MinWidth="80"/>
+            <TextBlock Grid.Row="1" Text="Text for Right4" HorizontalAlignment="Center" Margin="0,2,0,0"/>
+        </Grid>
+
+        <Grid Grid.Column="6">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Button Grid.Row="0" Content="Right5" VerticalAlignment="Stretch" MinWidth="80"/>
+            <TextBlock Grid.Row="1" Text="Text for Right5" HorizontalAlignment="Center" Margin="0,2,0,0"/>
+        </Grid>
     </Grid>
     <Slider Grid.Column="1" HorizontalAlignment="Stretch" MinWidth="50" VerticalAlignment="Stretch" />
 </Grid>
