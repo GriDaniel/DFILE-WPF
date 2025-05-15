@@ -91,7 +91,7 @@
         </Grid>
     </Border>
 
-    <Border Grid.Row="1" BorderBrush="Gray" BorderThickness="1">
+    <Border Grid.Row="1" Height="35" VerticalAlignment="Top">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -104,7 +104,7 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 
-                <Border Grid.Column="0" Margin="3" BorderBrush="#AAA" BorderThickness="1" MinWidth="200">
+                <Border Grid.Column="0" Margin="3" BorderBrush="#AAA" BorderThickness="1" MinWidth="200" VerticalAlignment="Center">
                     <Grid Height="25">
                         <Rectangle x:Name="ProgressBackground" Fill="#EEE"/>
                         <Rectangle x:Name="ProgressIndicator" Fill="#4C8BF5" HorizontalAlignment="Left" Width="0"/>
