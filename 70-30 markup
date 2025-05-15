@@ -1,22 +1,24 @@
-<Grid Grid.Row="3">
+<Grid Grid.Row="3" Height="100">
     <Grid.ColumnDefinitions>
         <ColumnDefinition Width="7*" />
         <ColumnDefinition Width="3*" />
     </Grid.ColumnDefinitions>
-    <DockPanel Grid.Column="0">
-        <Viewbox DockPanel.Dock="Left" Stretch="Uniform">
-            <Button Content="Left" />
-        </Viewbox>
-        <Viewbox DockPanel.Dock="Right" Stretch="Uniform">
-            <StackPanel Orientation="Horizontal">
-                <Button Content="Right1" />
-                <Button Content="Right2" />
-                <Button Content="Right3" />
-                <Button Content="Right4" />
-                <Button Content="Right5" />
-            </StackPanel>
-        </Viewbox>
-        <Grid /> <!-- Dummy element for white space -->
-    </DockPanel>
-    <Slider Grid.Column="1" HorizontalAlignment="Stretch" MinWidth="50" />
+    <Grid Grid.Column="0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition SharedSizeGroup="ButtonGroup" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition SharedSizeGroup="ButtonGroup" />
+            <ColumnDefinition SharedSizeGroup="ButtonGroup" />
+            <ColumnDefinition SharedSizeGroup="ButtonGroup" />
+            <ColumnDefinition SharedSizeGroup="ButtonGroup" />
+            <ColumnDefinition SharedSizeGroup="ButtonGroup" />
+        </Grid.ColumnDefinitions>
+        <Button Grid.Column="0" Content="Left" VerticalAlignment="Stretch" />
+        <Button Grid.Column="2" Content="Right1" VerticalAlignment="Stretch" />
+        <Button Grid.Column="3" Content="Right2" VerticalAlignment="Stretch" />
+        <Button Grid.Column="4" Content="Right3" VerticalAlignment="Stretch" />
+        <Button Grid.Column="5" Content="Right4" VerticalAlignment="Stretch" />
+        <Button Grid.Column="6" Content="Right5" VerticalAlignment="Stretch" />
+    </Grid>
+    <Slider Grid.Column="1" HorizontalAlignment="Stretch" MinWidth="50" VerticalAlignment="Stretch" />
 </Grid>
