@@ -16,25 +16,25 @@
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*" MinWidth="0"/> <!-- Spacer can now shrink to 0 -->
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
-                    <Viewbox Grid.Column="0" Stretch="Uniform" HorizontalAlignment="Left" VerticalAlignment="Center" MinHeight="30">
+                    <Viewbox Grid.Column="0" Stretch="Uniform" HorizontalAlignment="Left" VerticalAlignment="Center" MinHeight="10"> <!-- Reduced MinHeight -->
                         <StackPanel Orientation="Vertical" Width="100">
                             <Button Content="L_Btn 1" Height="75" />
                             <TextBlock Text="Left Label 1" HorizontalAlignment="Center" Margin="0,2,0,0"/>
                         </StackPanel>
                     </Viewbox>
 
-                    <Grid Grid.Column="1" MinWidth="10"/>
+                    <Grid Grid.Column="1"/> <!-- Spacer Grid -->
 
                     <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
                         <StackPanel.Resources>
                             <Style TargetType="Viewbox">
                                 <Setter Property="Stretch" Value="Uniform"/>
                                 <Setter Property="Margin" Value="5,0,0,0"/>
-                                <Setter Property="MinHeight" Value="30"/>
+                                <Setter Property="MinHeight" Value="10"/> <!-- Significantly Reduced MinHeight -->
                             </Style>
                             <Style TargetType="StackPanel" x:Key="ButtonTextContainerStyle">
                                 <Setter Property="Orientation" Value="Vertical"/>
@@ -84,7 +84,7 @@
             </Border>
 
             <Border Grid.Column="1" BorderBrush="LightGreen" BorderThickness="1" Padding="5">
-                <StackPanel VerticalAlignment="Center" MinHeight="40">
+                <StackPanel VerticalAlignment="Center" MinHeight="40"> <!-- This MinHeight still applies -->
                     <TextBlock Text="Slider Title" HorizontalAlignment="Center" Margin="0,0,0,5"/>
                     <Slider Minimum="0" Maximum="100" Value="50" MinWidth="190" VerticalAlignment="Center"/>
                 </StackPanel>
@@ -105,8 +105,8 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 
-                <Viewbox Grid.Column="0" Stretch="Uniform" MinHeight="15" MaxHeight="35" Margin="3" VerticalAlignment="Center">
-                    <Border BorderBrush="#AAA" BorderThickness="1" MinWidth="200">
+                <Viewbox Grid.Column="0" Stretch="Fill" MinHeight="5" MaxHeight="35" Margin="3" VerticalAlignment="Center"> <!-- Stretch="Fill", Reduced MinHeight -->
+                    <Border BorderBrush="#AAA" BorderThickness="1" MinWidth="200"> 
                         <Grid Height="25">
                             <Rectangle x:Name="ProgressBackground" Fill="#EEE"/>
                             <Rectangle x:Name="ProgressIndicator" Fill="#4C8BF5" HorizontalAlignment="Left" Width="0"/>
