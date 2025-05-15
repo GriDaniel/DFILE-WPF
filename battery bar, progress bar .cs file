@@ -9,64 +9,95 @@ namespace YourNamespace
     public partial class MainWindow : Window
     {
         private DispatcherTimer _timer;
-        private DateTime _startTime; // Track start time for precise elapsed time
+        private TimeSpan _currentTime;
         private TimeSpan _totalTime;
-        
+        private int _lastDisplayedSeconds; // Stores the integer part of seconds last shown in TimeDisplay
+
         private int _batteryState = 0;
         private readonly Color[] _batteryColors = { Colors.Red, Colors.Yellow, Colors.Green };
         private readonly double[] _batteryHeights = { 0.2, 0.6, 1.0 };
         private DispatcherTimer _batteryTimer;
-        
+
         public MainWindow()
         {
             InitializeComponent();
-            
+
             ProgressIndicator.Fill = new SolidColorBrush(Colors.DodgerBlue);
             BatteryBar.Fill = new SolidColorBrush(Colors.LightGreen);
-            
-            Loaded += (s, e) => {
+
+            Loaded += (s, e) =>
+            {
                 InitProgressAnimation();
                 InitBatteryAnimation();
             };
         }
-        
+
         private void InitProgressAnimation()
         {
             _totalTime = TimeSpan.FromSeconds(5);
-            _startTime = DateTime.Now; // Initialize start time
-            
-            // 20ms interval for smooth progress bar animation
-            _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(20) };
-            _timer.Tick += (s, e) => {
-                TimeSpan elapsed = DateTime.Now - _startTime;
-                
-                if (elapsed >= _totalTime)
+            _currentTime = _totalTime;
+
+            // Initial setup of display before timer starts
+            _lastDisplayedSeconds = (int)Math.Ceiling(_currentTime.TotalSeconds);
+            TimeDisplay.Text = TimeSpan.FromSeconds(_lastDisplayedSeconds).ToString(@"hh\:mm\:ss");
+            UpdateProgressBar(0); // Progress is 0% at the start
+
+            _timer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromMilliseconds(50) // Tick frequently for smooth animation
+            };
+
+            _timer.Tick += (s, e) =>
+            {
+                TimeSpan timeAtTickStart = _currentTime; // Capture time at the beginning of this tick's logic
+
+                // If _currentTime was zero at the start of this tick, reset to _totalTime for a new cycle
+                if (timeAtTickStart == TimeSpan.Zero)
                 {
-                    TimeDisplay.Text = "00:00:00";
-                    UpdateProgressBar(100);
-                    _startTime = DateTime.Now; // Reset start time
-                    TimeDisplay.Text = _totalTime.ToString(@"hh\:mm\:ss");
-                    UpdateProgressBar(0);
+                    _currentTime = _totalTime;
                 }
-                else
+
+                _currentTime = _currentTime.Subtract(_timer.Interval); // Decrement current time
+
+                bool justReachedZero = false;
+                if (_currentTime.TotalMilliseconds < 0) // Check if time has run out
                 {
-                    double progress = (elapsed.TotalMilliseconds / _totalTime.TotalMilliseconds) * 100;
-                    progress = Math.Min(progress, 100); // Cap at 100%
-                    
-                    // Update time display only when seconds change
-                    TimeSpan remaining = _totalTime - elapsed;
-                    TimeSpan prevRemaining = remaining + _timer.Interval;
-                    if (prevRemaining.Seconds != remaining.Seconds)
+                    _currentTime = TimeSpan.Zero; // Clamp to zero
+                    // Check if it transitioned from positive to zero in this exact tick
+                    if (timeAtTickStart > TimeSpan.Zero)
                     {
-                        TimeDisplay.Text = remaining.ToString(@"hh\:mm\:ss");
+                        justReachedZero = true;
                     }
-                    
-                    UpdateProgressBar(progress);
+                }
+
+                // Calculate progress
+                double elapsedRatio = 0.0;
+                if (_totalTime.TotalMilliseconds > 0) // Avoid division by zero if _totalTime is zero
+                {
+                    elapsedRatio = (_totalTime.TotalMilliseconds - _currentTime.TotalMilliseconds) / _totalTime.TotalMilliseconds;
+                }
+                elapsedRatio = Math.Max(0.0, Math.Min(1.0, elapsedRatio)); // Clamp ratio to [0,1]
+
+                double progress = elapsedRatio * 100.0;
+                UpdateProgressBar(progress);
+
+                // Determine the seconds value to display
+                int secondsToDisplay = (int)Math.Ceiling(_currentTime.TotalSeconds); // Use ceiling for countdown effect
+                if (_currentTime == TimeSpan.Zero) // Always display "0" when time is exactly zero
+                {
+                    secondsToDisplay = 0;
+                }
+
+                // Update the time display text if necessary
+                if (_lastDisplayedSeconds != secondsToDisplay || justReachedZero || timeAtTickStart == TimeSpan.Zero)
+                {
+                    TimeDisplay.Text = TimeSpan.FromSeconds(secondsToDisplay).ToString(@"hh\:mm\:ss");
+                    _lastDisplayedSeconds = secondsToDisplay;
                 }
             };
             _timer.Start();
         }
-        
+
         private void UpdateProgressBar(double progress)
         {
             if (ProgressBackground.ActualWidth > 0)
@@ -75,39 +106,35 @@ namespace YourNamespace
                 ProgressText.Text = $"{Math.Round(progress)}%";
             }
         }
-        
+
         private void InitBatteryAnimation()
         {
-            _batteryTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(2) };
-            _batteryTimer.Tick += (s, e) => {
+            _batteryTimer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromSeconds(2)
+            };
+            _batteryTimer.Tick += (s, e) =>
+            {
                 _batteryState = (_batteryState + 1) % 3;
-                
+
                 double containerHeight = BatteryContainer.ActualHeight;
-                
-                Storyboard storyboard = new Storyboard();
-                
-                ColorAnimation colorAnim = new ColorAnimation {
+
+                Storyboard colorStoryboard = new Storyboard();
+                ColorAnimation colorAnim = new ColorAnimation
+                {
                     To = _batteryColors[_batteryState],
                     Duration = TimeSpan.FromSeconds(0.5)
                 };
                 Storyboard.SetTarget(colorAnim, BatteryBar);
                 Storyboard.SetTargetProperty(colorAnim, new PropertyPath("(Shape.Fill).(SolidColorBrush.Color)"));
-                storyboard.Children.Add(colorAnim);
-                
-                // Animate height for smoother battery transition
-                DoubleAnimation heightAnim = new DoubleAnimation {
-                    To = containerHeight * _batteryHeights[_batteryState],
-                    Duration = TimeSpan.FromSeconds(0.5)
-                };
-                Storyboard.SetTarget(heightAnim, BatteryBar);
-                Storyboard.SetTargetProperty(heightAnim, new PropertyPath("Height"));
-                storyboard.Children.Add(heightAnim);
-                
-                storyboard.Begin(this);
+                colorStoryboard.Children.Add(colorAnim);
+                colorStoryboard.Begin(this);
+
+                BatteryBar.Height = containerHeight * _batteryHeights[_batteryState];
             };
             _batteryTimer.Start();
         }
-        
+
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
             _timer?.Stop();
