@@ -32,7 +32,7 @@
             <TextBlock Grid.Row="1" Text="Text for Right1" HorizontalAlignment="Center" Margin="0,2,0,0"/>
         </Grid>
 
-        <Grid Grid.Column="3">
+        <Grid Grid.Column="3" Margin="5,0,0,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
@@ -41,7 +41,7 @@
             <TextBlock Grid.Row="1" Text="Text for Right2" HorizontalAlignment="Center" Margin="0,2,0,0"/>
         </Grid>
 
-        <Grid Grid.Column="4">
+        <Grid Grid.Column="4" Margin="5,0,0,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
@@ -50,7 +50,7 @@
             <TextBlock Grid.Row="1" Text="Text for Right3" HorizontalAlignment="Center" Margin="0,2,0,0"/>
         </Grid>
 
-        <Grid Grid.Column="5">
+        <Grid Grid.Column="5" Margin="5,0,0,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
@@ -59,7 +59,7 @@
             <TextBlock Grid.Row="1" Text="Text for Right4" HorizontalAlignment="Center" Margin="0,2,0,0"/>
         </Grid>
 
-        <Grid Grid.Column="6">
+        <Grid Grid.Column="6" Margin="5,0,0,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
