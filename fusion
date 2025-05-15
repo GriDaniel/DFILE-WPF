@@ -97,14 +97,14 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="50"/>
             </Grid.ColumnDefinitions>
-
+            
             <Grid Grid.Column="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 
-                <Border Grid.Column="0" Margin="3,3,0,3" BorderBrush="#AAA" BorderThickness="1" MinWidth="200">
+                <Border Grid.Column="0" Margin="3" BorderBrush="#AAA" BorderThickness="1" MinWidth="200">
                     <Grid Height="25">
                         <Rectangle x:Name="ProgressBackground" Fill="#EEE"/>
                         <Rectangle x:Name="ProgressIndicator" Fill="#4C8BF5" HorizontalAlignment="Left" Width="0"/>
