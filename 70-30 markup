@@ -3,21 +3,17 @@
         <ColumnDefinition Width="7*" />
         <ColumnDefinition Width="3*" />
     </Grid.ColumnDefinitions>
-    <Grid Grid.Column="0" Grid.IsSharedSizeScope="True">
+    <Grid Grid.Column="0">
         <Grid.ColumnDefinitions>
-            <!-- Set MinWidth on the ColumnDefinition, not the Button.
-                 Adjust this MinWidth to the smallest acceptable width for a button column. -->
-            <ColumnDefinition SharedSizeGroup="ButtonGroup" Width="Auto" MinWidth="40"/>
-            <ColumnDefinition Width="*" MinWidth="10" /> <!-- Spacer, shrinks first -->
-            <ColumnDefinition SharedSizeGroup="ButtonGroup" Width="Auto" MinWidth="40"/>
-            <ColumnDefinition SharedSizeGroup="ButtonGroup" Width="Auto" MinWidth="40"/>
-            <ColumnDefinition SharedSizeGroup="ButtonGroup" Width="Auto" MinWidth="40"/>
-            <ColumnDefinition SharedSizeGroup="ButtonGroup" Width="Auto" MinWidth="40"/>
-            <ColumnDefinition SharedSizeGroup="ButtonGroup" Width="Auto" MinWidth="40"/>
+            <ColumnDefinition SharedSizeGroup="ButtonGroup" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition SharedSizeGroup="ButtonGroup" />
+            <ColumnDefinition SharedSizeGroup="ButtonGroup" />
+            <ColumnDefinition SharedSizeGroup="ButtonGroup" />
+            <ColumnDefinition SharedSizeGroup="ButtonGroup" />
+            <ColumnDefinition SharedSizeGroup="ButtonGroup" />
         </Grid.ColumnDefinitions>
-
-        <!-- Remove MinWidth from Buttons. They will now fill their column. -->
-        <Button Grid.Column="0" Content="Left"   VerticalAlignment="Stretch" />
+        <Button Grid.Column="0" Content="Left" VerticalAlignment="Stretch" />
         <Button Grid.Column="2" Content="Right1" VerticalAlignment="Stretch" />
         <Button Grid.Column="3" Content="Right2" VerticalAlignment="Stretch" />
         <Button Grid.Column="4" Content="Right3" VerticalAlignment="Stretch" />
