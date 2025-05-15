@@ -3,22 +3,22 @@
         <ColumnDefinition Width="7*" />
         <ColumnDefinition Width="3*" />
     </Grid.ColumnDefinitions>
-    <Grid Grid.Column="0">
+    <Grid Grid.Column="0" Grid.IsSharedSizeScope="True"> <---- Added IsSharedSizeScope
         <Grid.ColumnDefinitions>
-            <ColumnDefinition SharedSizeGroup="ButtonGroup" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition SharedSizeGroup="ButtonGroup" />
-            <ColumnDefinition SharedSizeGroup="ButtonGroup" />
-            <ColumnDefinition SharedSizeGroup="ButtonGroup" />
-            <ColumnDefinition SharedSizeGroup="ButtonGroup" />
-            <ColumnDefinition SharedSizeGroup="ButtonGroup" />
+            <ColumnDefinition SharedSizeGroup="ButtonGroup" Width="Auto"/> <--- Width="Auto" is better with SharedSizeGroup
+            <ColumnDefinition Width="*" MinWidth="10"/> <--- Spacer, with a MinWidth to ensure some space
+            <ColumnDefinition SharedSizeGroup="ButtonGroup" Width="Auto"/>
+            <ColumnDefinition SharedSizeGroup="ButtonGroup" Width="Auto"/>
+            <ColumnDefinition SharedSizeGroup="ButtonGroup" Width="Auto"/>
+            <ColumnDefinition SharedSizeGroup="ButtonGroup" Width="Auto"/>
+            <ColumnDefinition SharedSizeGroup="ButtonGroup" Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <Button Grid.Column="0" Content="Left" VerticalAlignment="Stretch" />
-        <Button Grid.Column="2" Content="Right1" VerticalAlignment="Stretch" />
-        <Button Grid.Column="3" Content="Right2" VerticalAlignment="Stretch" />
-        <Button Grid.Column="4" Content="Right3" VerticalAlignment="Stretch" />
-        <Button Grid.Column="5" Content="Right4" VerticalAlignment="Stretch" />
-        <Button Grid.Column="6" Content="Right5" VerticalAlignment="Stretch" />
+        <Button Grid.Column="0" Content="Left"   VerticalAlignment="Stretch" MinWidth="80"/> <--- Added MinWidth
+        <Button Grid.Column="2" Content="Right1" VerticalAlignment="Stretch" MinWidth="80"/> <--- Added MinWidth
+        <Button Grid.Column="3" Content="Right2" VerticalAlignment="Stretch" MinWidth="80"/> <--- Added MinWidth
+        <Button Grid.Column="4" Content="Right3" VerticalAlignment="Stretch" MinWidth="80"/> <--- Added MinWidth
+        <Button Grid.Column="5" Content="Right4" VerticalAlignment="Stretch" MinWidth="80"/> <--- Added MinWidth
+        <Button Grid.Column="6" Content="Right5" VerticalAlignment="Stretch" MinWidth="80"/> <--- Added MinWidth
     </Grid>
     <Slider Grid.Column="1" HorizontalAlignment="Stretch" MinWidth="50" VerticalAlignment="Stretch" />
 </Grid>
