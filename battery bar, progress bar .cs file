@@ -1,230 +1,96 @@
-// SimpleRow.xaml.cs
 using System;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
 
 namespace YourNamespace
 {
-    public partial class SimpleRow : UserControl
+    public partial class MainWindow : Window
     {
-        // Timer-related fields
         private DispatcherTimer _timer;
         private TimeSpan _currentTime;
         private TimeSpan _totalTime;
         
-        // Battery state fields
         private int _batteryState = 0;
         private readonly Color[] _batteryColors = { Colors.Red, Colors.Yellow, Colors.Green };
-        private readonly double[] _batteryHeights = { 0.2, 0.6, 1.0 }; // percentages
+        private readonly double[] _batteryHeights = { 0.2, 0.6, 1.0 };
         private DispatcherTimer _batteryTimer;
         
-        public SimpleRow()
+        public MainWindow()
         {
             InitializeComponent();
             
-            // Initialize with solid color brushes to enable animations
             ProgressIndicator.Fill = new SolidColorBrush(Colors.DodgerBlue);
             BatteryBar.Fill = new SolidColorBrush(Colors.LightGreen);
             
-            // Subscribe to the Loaded event to ensure layout is complete
-            Loaded += SimpleRow_Loaded;
+            Loaded += (s, e) => {
+                InitProgressAnimation();
+                InitBatteryAnimation();
+            };
         }
         
-        private void SimpleRow_Loaded(object sender, RoutedEventArgs e)
+        private void InitProgressAnimation()
         {
-            // Initialize and start animations after layout is complete
-            InitializeTimerAnimation();
-            InitializeBatteryAnimation();
-        }
-        
-        // Initialize the timer progress animation
-        private void InitializeTimerAnimation()
-        {
-            // Parse the initial time from TimeDisplay
-            string timeText = TimeDisplay.Text;
-            string[] parts = timeText.Split(':');
-            int hours = int.Parse(parts[0]);
-            int minutes = int.Parse(parts[1]);
-            int seconds = int.Parse(parts[2]);
-            
-            _totalTime = new TimeSpan(hours, minutes, seconds);
+            // 5-second countdown timer
+            _totalTime = TimeSpan.FromSeconds(5);
             _currentTime = _totalTime;
             
-            // Set up timer that ticks every 100ms for smooth animation
-            _timer = new DispatcherTimer();
-            _timer.Interval = TimeSpan.FromMilliseconds(100);
-            _timer.Tick += TimerTick;
+            _timer = new DispatcherTimer {
+                Interval = TimeSpan.FromMilliseconds(100)
+            };
+            _timer.Tick += (s, e) => {
+                _currentTime = _currentTime.Subtract(TimeSpan.FromMilliseconds(100));
+                
+                if (_currentTime.TotalMilliseconds <= 0)
+                    _currentTime = _totalTime;
+                
+                TimeDisplay.Text = _currentTime.ToString(@"hh\:mm\:ss");
+                
+                // Convert time to progress percentage
+                double progress = 100 - (_currentTime.TotalMilliseconds / _totalTime.TotalMilliseconds * 100);
+                if (ProgressBackground.ActualWidth > 0)
+                {
+                    ProgressIndicator.Width = progress * ProgressBackground.ActualWidth / 100;
+                    ProgressText.Text = $"{Math.Round(progress)}%";
+                }
+            };
             _timer.Start();
         }
         
-        // Handle timer ticks for progress animation
-        private void TimerTick(object sender, EventArgs e)
+        private void InitBatteryAnimation()
         {
-            // Decrease current time
-            _currentTime = _currentTime.Subtract(TimeSpan.FromMilliseconds(100));
-            
-            // Reset if we reach zero
-            if (_currentTime.TotalMilliseconds <= 0)
-            {
-                _currentTime = _totalTime;
-            }
-            
-            // Update time display
-            TimeDisplay.Text = _currentTime.ToString(@"hh\:mm\:ss");
-            
-            // Calculate progress percentage
-            double progressPercent = 100 - (_currentTime.TotalMilliseconds / _totalTime.TotalMilliseconds * 100);
-            
-            // Update progress bar (without animation for continuous movement)
-            if (ProgressBackground.ActualWidth > 0)
-            {
-                ProgressIndicator.Width = progressPercent * ProgressBackground.ActualWidth / 100;
-                ProgressText.Text = $"{Math.Round(progressPercent)}%";
-            }
-        }
-        
-        // Initialize battery animation
-        private void InitializeBatteryAnimation()
-        {
-            _batteryTimer = new DispatcherTimer();
-            _batteryTimer.Interval = TimeSpan.FromSeconds(2); // Change battery state every 2 seconds
-            _batteryTimer.Tick += BatteryTimerTick;
+            _batteryTimer = new DispatcherTimer {
+                Interval = TimeSpan.FromSeconds(2)
+            };
+            _batteryTimer.Tick += (s, e) => {
+                // Cycle through 3 states: red/low, yellow/medium, green/high
+                _batteryState = (_batteryState + 1) % 3;
+                
+                double containerHeight = BatteryContainer.ActualHeight;
+                
+                // Animate the battery bar color
+                Storyboard colorStoryboard = new Storyboard();
+                ColorAnimation colorAnim = new ColorAnimation {
+                    To = _batteryColors[_batteryState],
+                    Duration = TimeSpan.FromSeconds(0.5)
+                };
+                Storyboard.SetTarget(colorAnim, BatteryBar);
+                Storyboard.SetTargetProperty(colorAnim, new PropertyPath("(Shape.Fill).(SolidColorBrush.Color)"));
+                colorStoryboard.Children.Add(colorAnim);
+                colorStoryboard.Begin(this);
+                
+                // Direct height change (can't animate Rectangle.Height property)
+                BatteryBar.Height = containerHeight * _batteryHeights[_batteryState];
+            };
             _batteryTimer.Start();
         }
         
-        // Handle battery timer ticks
-        private void BatteryTimerTick(object sender, EventArgs e)
+        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
-            // Move to next battery state
-            _batteryState = (_batteryState + 1) % 3;
-            
-            // Animate to new battery state
-            Color targetColor = _batteryColors[_batteryState];
-            
-            // Get the battery container height
-            FrameworkElement parent = BatteryBar.Parent as FrameworkElement;
-            double containerHeight = parent != null ? parent.ActualHeight : 100;
-            
-            // Calculate target height
-            double targetHeight = containerHeight * _batteryHeights[_batteryState];
-            
-            // Animate color change
-            AnimateBatteryColor(targetColor, TimeSpan.FromSeconds(0.5));
-            
-            // Animate height change
-            AnimateBatteryHeight(targetHeight, TimeSpan.FromSeconds(0.5));
-        }
-        
-        // Animation for battery color
-        private void AnimateBatteryColor(Color targetColor, TimeSpan duration)
-        {
-            // Ensure we have a SolidColorBrush to animate
-            if (!(BatteryBar.Fill is SolidColorBrush))
-            {
-                BatteryBar.Fill = new SolidColorBrush(targetColor);
-                return;
-            }
-            
-            // Create a storyboard for the animation
-            Storyboard batteryStoryboard = new Storyboard();
-            
-            // Get the current color
-            Color currentColor = ((SolidColorBrush)BatteryBar.Fill).Color;
-            
-            // Create color animation for the battery bar
-            ColorAnimation colorAnimation = new ColorAnimation
-            {
-                From = currentColor,
-                To = targetColor,
-                Duration = duration
-            };
-            
-            // Register the animation with the storyboard
-            Storyboard.SetTarget(colorAnimation, BatteryBar);
-            Storyboard.SetTargetProperty(colorAnimation, new PropertyPath("Fill.Color"));
-            batteryStoryboard.Children.Add(colorAnimation);
-            
-            // Start the animation
-            batteryStoryboard.Begin(this);
-        }
-        
-        // Animation for battery height
-        private void AnimateBatteryHeight(double targetHeight, TimeSpan duration)
-        {
-            // Create a storyboard for the animation
-            Storyboard heightStoryboard = new Storyboard();
-            
-            // Create height animation
-            DoubleAnimation heightAnimation = new DoubleAnimation
-            {
-                To = targetHeight,
-                Duration = duration
-            };
-            
-            // Register the animation with the storyboard
-            Storyboard.SetTarget(heightAnimation, BatteryBar);
-            Storyboard.SetTargetProperty(heightAnimation, new PropertyPath(FrameworkElement.HeightProperty));
-            heightStoryboard.Children.Add(heightAnimation);
-            
-            // Start the animation
-            heightStoryboard.Begin(this);
-        }
-        
-        // Progress Bar Animation - kept for external triggering if needed
-        public void AnimateProgress(double targetValue, TimeSpan duration)
-        {
-            if (targetValue < 0) targetValue = 0;
-            if (targetValue > 100) targetValue = 100;
-            
-            // Ensure parent element has width
-            if (ProgressBackground.ActualWidth <= 0)
-            {
-                // Fallback if control isn't fully rendered
-                ProgressIndicator.Width = 0;
-                ProgressText.Text = $"{targetValue}%";
-                return;
-            }
-            
-            // Create a storyboard for the animation
-            Storyboard progressStoryboard = new Storyboard();
-            
-            // Calculate target width based on container's actual width
-            double targetWidth = targetValue * ProgressBackground.ActualWidth / 100;
-            
-            // Create width animation for the progress indicator
-            DoubleAnimation widthAnimation = new DoubleAnimation
-            {
-                To = targetWidth,
-                Duration = duration
-            };
-            
-            // Register the animation with the storyboard
-            Storyboard.SetTarget(widthAnimation, ProgressIndicator);
-            Storyboard.SetTargetProperty(widthAnimation, new PropertyPath(FrameworkElement.WidthProperty));
-            progressStoryboard.Children.Add(widthAnimation);
-            
-            // Start the animation
-            progressStoryboard.Begin(this);
-            
-            // Update the text
-            ProgressText.Text = $"{targetValue}%";
-        }
-        
-        // Cleanup method to stop timers when control is unloaded
-        public void Cleanup()
-        {
-            if (_timer != null)
-            {
-                _timer.Stop();
-            }
-            
-            if (_batteryTimer != null)
-            {
-                _batteryTimer.Stop();
-            }
+            _timer?.Stop();
+            _batteryTimer?.Stop();
+            base.OnClosing(e);
         }
     }
 }
