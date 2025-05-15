@@ -1,7 +1,7 @@
 <Grid>
     <Grid.RowDefinitions>
         <RowDefinition Height="Auto"/>
-        <RowDefinition Height="75"/>
+        <RowDefinition Height="50"/>
         <RowDefinition Height="*"/>
     </Grid.RowDefinitions>
 
@@ -91,27 +91,33 @@
         </Grid>
     </Border>
 
-    <Border Grid.Row="1" BorderBrush="DarkCyan" BorderThickness="1" VerticalAlignment="Top">
-        <Grid x:Name="DownloadRowContainer" Height="75">
+    <Border Grid.Row="1" BorderBrush="DarkSlateBlue" BorderThickness="1" VerticalAlignment="Top" Padding="5">
+        <Grid x:Name="SecondMainRowContainer" Height="50">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto" MinWidth="180"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-
-            <Grid Grid.Column="0" Margin="5,0,0,0" VerticalAlignment="Center">
+            
+            <Grid Grid.Column="0" VerticalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <ProgressBar Grid.Column="0" x:Name="MainProgressBar" Height="25" MinWidth="200" Value="60" VerticalAlignment="Center"/>
-                <TextBlock Grid.Column="1" x:Name="TimeRemainingText" Text="00:35 left" VerticalAlignment="Center" Margin="10,0,10,0" FontFamily="Consolas"/>
+                
+                <ProgressBar Grid.Column="0" x:Name="StandardProgressBar" Height="25" MinWidth="200" Value="50" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                
+                <TextBlock x:Name="TimeDisplay" 
+                           Grid.Column="1" 
+                           Text="00:00:05" 
+                           VerticalAlignment="Center" 
+                           Margin="5,0,10,0"
+                           FontFamily="Consolas"/>
             </Grid>
-
-            <StackPanel Grid.Column="1" Orientation="Vertical" VerticalAlignment="Center" Margin="10,0,10,0">
-                <TextBlock x:Name="FileNameText" Text="Downloading_very_long_file_name_example.zip" TextTrimming="CharacterEllipsis" ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}" FontWeight="SemiBold"/>
-                <TextBlock x:Name="ProgressText" Text="60% (60.0 MB / 100.0 MB)" Margin="0,2,0,2" FontSize="10"/>
-                <Button x:Name="CancelButton" Content="Cancel Download" HorizontalAlignment="Stretch" Padding="5,2" Margin="0,3,0,0"/>
-            </StackPanel>
+            
+            <Border Grid.Column="1" x:Name="BatteryContainer" Width="40" VerticalAlignment="Stretch" HorizontalAlignment="Right">
+                 <Rectangle x:Name="BatteryBar" Fill="#77DD77" Width="10" HorizontalAlignment="Center" 
+                           VerticalAlignment="Bottom" Height="10" Margin="0,0,0,5"/>
+            </Border>
         </Grid>
     </Border>
 </Grid>
