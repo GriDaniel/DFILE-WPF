@@ -1,12 +1,12 @@
 <Grid>
     <Grid.RowDefinitions>
         <RowDefinition Height="Auto"/>
-        <RowDefinition Height="35"/>
+        <RowDefinition Height="Auto"/>
         <RowDefinition Height="*"/>
     </Grid.RowDefinitions>
 
     <Border Grid.Row="0" BorderBrush="Gray" BorderThickness="1" VerticalAlignment="Top">
-        <Grid x:Name="MainRowContainer" MinHeight="40" MaxHeight="90" VerticalAlignment="Top">
+        <Grid x:Name="MainRowContainer" VerticalAlignment="Top">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="7*" />
                 <ColumnDefinition Width="3*" MinWidth="200" />
@@ -20,7 +20,7 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
-                    <Viewbox Grid.Column="0" Stretch="Uniform" HorizontalAlignment="Left" VerticalAlignment="Center">
+                    <Viewbox Grid.Column="0" Stretch="Uniform" HorizontalAlignment="Left" VerticalAlignment="Center" MinHeight="30">
                         <StackPanel Orientation="Vertical" Width="100">
                             <Button Content="L_Btn 1" Height="75" />
                             <TextBlock Text="Left Label 1" HorizontalAlignment="Center" Margin="0,2,0,0"/>
@@ -34,6 +34,7 @@
                             <Style TargetType="Viewbox">
                                 <Setter Property="Stretch" Value="Uniform"/>
                                 <Setter Property="Margin" Value="5,0,0,0"/>
+                                <Setter Property="MinHeight" Value="30"/>
                             </Style>
                             <Style TargetType="StackPanel" x:Key="ButtonTextContainerStyle">
                                 <Setter Property="Orientation" Value="Vertical"/>
@@ -91,7 +92,7 @@
         </Grid>
     </Border>
 
-    <Border Grid.Row="1" Height="35" VerticalAlignment="Top">
+    <Border Grid.Row="1" VerticalAlignment="Top">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -104,13 +105,15 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 
-                <Border Grid.Column="0" Margin="3" BorderBrush="#AAA" BorderThickness="1" MinWidth="200" VerticalAlignment="Center">
-                    <Grid Height="25">
-                        <Rectangle x:Name="ProgressBackground" Fill="#EEE"/>
-                        <Rectangle x:Name="ProgressIndicator" Fill="#4C8BF5" HorizontalAlignment="Left" Width="0"/>
-                        <TextBlock x:Name="ProgressText" HorizontalAlignment="Center" VerticalAlignment="Center" Text="0%"/>
-                    </Grid>
-                </Border>
+                <Viewbox Grid.Column="0" Stretch="Uniform" MinHeight="15" MaxHeight="35" Margin="3" VerticalAlignment="Center">
+                    <Border BorderBrush="#AAA" BorderThickness="1" MinWidth="200">
+                        <Grid Height="25">
+                            <Rectangle x:Name="ProgressBackground" Fill="#EEE"/>
+                            <Rectangle x:Name="ProgressIndicator" Fill="#4C8BF5" HorizontalAlignment="Left" Width="0"/>
+                            <TextBlock x:Name="ProgressText" HorizontalAlignment="Center" VerticalAlignment="Center" Text="0%"/>
+                        </Grid>
+                    </Border>
+                </Viewbox>
                 
                 <TextBlock x:Name="TimeDisplay" 
                            Grid.Column="1" 
@@ -126,4 +129,6 @@
             </Border>
         </Grid>
     </Border>
+
+    <Border Grid.Row="2" Background="LightGoldenrodYellow"/>
 </Grid>
