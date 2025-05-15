@@ -10,7 +10,7 @@ namespace YourNamespace
     {
         private DispatcherTimer _timer;
         private TimeSpan _totalTime;
-        private DateTime _countdownStartTime; // Tracks when the current countdown cycle started
+        private DateTime _countdownStartTime;
         private int _lastDisplayedSeconds;
 
         private int _batteryState = 0;
@@ -35,16 +35,15 @@ namespace YourNamespace
         private void InitProgressAnimation()
         {
             _totalTime = TimeSpan.FromSeconds(5);
-            // Start the first countdown cycle
+            // Initial setup for the very first countdown
             _countdownStartTime = DateTime.UtcNow;
-            TimeSpan initialRemaining = _totalTime - (DateTime.UtcNow - _countdownStartTime);
-            _lastDisplayedSeconds = (int)Math.Ceiling(initialRemaining.TotalSeconds);
+            _lastDisplayedSeconds = (int)Math.Ceiling(_totalTime.TotalSeconds);
             TimeDisplay.Text = TimeSpan.FromSeconds(_lastDisplayedSeconds).ToString(@"hh\:mm\:ss");
-            UpdateProgressBar(0); // Progress is 0% at the very start
+            UpdateProgressBar(0);
 
             _timer = new DispatcherTimer
             {
-                Interval = TimeSpan.FromMilliseconds(20) // Tick frequently for smooth animation, 20-50ms is good
+                Interval = TimeSpan.FromMilliseconds(20)
             };
 
             _timer.Tick += (s, e) =>
@@ -54,22 +53,20 @@ namespace YourNamespace
 
                 if (currentTimeRemaining.TotalMilliseconds <= 0)
                 {
-                    currentTimeRemaining = TimeSpan.Zero; // Clamp at zero
-
+                    // Display final state of the completed cycle
                     TimeDisplay.Text = "00:00:00";
-                    UpdateProgressBar(100); // Ensure it hits 100%
+                    UpdateProgressBar(100);
 
-                    // Reset for the next cycle
+                    // Immediately reset and display the initial state for the new cycle
                     _countdownStartTime = DateTime.UtcNow;
-                    // The next tick will naturally pick up the new start time
-                    // and display _totalTime, and reset progress bar.
-                    _lastDisplayedSeconds = (int)Math.Ceiling(_totalTime.TotalSeconds); // Prepare for next cycle's first display
+                    _lastDisplayedSeconds = (int)Math.Ceiling(_totalTime.TotalSeconds); // e.g., 5
+                    TimeDisplay.Text = TimeSpan.FromSeconds(_lastDisplayedSeconds).ToString(@"hh\:mm\:ss"); // Set to "00:00:05"
+                    UpdateProgressBar(0); // Reset progress to 0%
                 }
                 else
                 {
-                    // Calculate progress based on actual elapsed time
                     double progress = (elapsedSinceCycleStart.TotalMilliseconds / _totalTime.TotalMilliseconds) * 100.0;
-                    progress = Math.Max(0, Math.Min(100, progress)); // Clamp progress between 0 and 100
+                    progress = Math.Max(0, Math.Min(100, progress));
                     UpdateProgressBar(progress);
 
                     int secondsToDisplay = (int)Math.Ceiling(currentTimeRemaining.TotalSeconds);
