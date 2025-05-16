@@ -1,38 +1,61 @@
-<Window x:Class="WpfButtonRow.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:WpfButtonRow"
-        mc:Ignorable="d"
-        Title="Button Row Demo" Height="150" Width="800" MinWidth="200">
-    <Grid Margin="10">
-        <Grid.ColumnDefinitions>
-            <!-- Group 1: Takes its natural width -->
-            <ColumnDefinition Width="Auto"/>
-            <!-- Spacer: Takes all remaining space, can shrink to 0 -->
-            <ColumnDefinition Width="*" MinWidth="0"/>
-            <!-- Group 2: Takes its natural width -->
-            <ColumnDefinition Width="Auto"/>
-        </Grid.ColumnDefinitions>
+<Grid Name="mainGrid">
+    <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="Auto" />
+        <ColumnDefinition Width="*" MinWidth="0" />
+        <ColumnDefinition Width="Auto" />
+    </Grid.ColumnDefinitions>
+    
+    <StackPanel Grid.Column="0" Orientation="Horizontal" Name="leftButtonGroup">
+        <!-- Left side buttons -->
+        <Button Content="Button 1" Margin="2" />
+        <Button Content="Button 2" Margin="2" />
+    </StackPanel>
+    
+    <StackPanel Grid.Column="2" Orientation="Horizontal" Name="rightButtonGroup">
+        <!-- Right side buttons -->
+        <Button Content="Button 3" Margin="2" />
+        <Button Content="Button 4" Margin="2" />
+    </StackPanel>
+</Grid>
 
-        <!-- Group 1 -->
-        <Viewbox Grid.Column="0" StretchDirection="DownOnly" HorizontalAlignment="Left">
-            <StackPanel Orientation="Horizontal">
-                <Button Content="Group 1 - Btn 1" Margin="2" Padding="10,5"/>
-                <Button Content="Group 1 - Btn 2" Margin="2" Padding="10,5"/>
-                <Button Content="G1 B3" Margin="2" Padding="10,5"/>
-            </StackPanel>
-        </Viewbox>
-
-        <!-- Optional: Visual for the spacer, helps in debugging. Can be removed. -->
-        <!-- <Border Grid.Column="1" Background="LightBlue" /> -->
-
-        <!-- Group 2 -->
-        <Viewbox Grid.Column="2" StretchDirection="DownOnly" HorizontalAlignment="Right">
-            <StackPanel Orientation="Horizontal">
-                <Button Content="Group 2 - Btn A" Margin="2" Padding="10,5"/>
-                <Button Content="Group 2 - Btn B" Margin="2" Padding="10,5"/>
-            </StackPanel>
-        </Viewbox>
-    </Grid>
+public partial class MainWindow : Window
+{
+    private double originalLeftGroupWidth;
+    private double originalRightGroupWidth;
+    
+    public MainWindow()
+    {
+        InitializeComponent();
+        
+        this.Loaded += (s, e) => {
+            // Store original sizes
+            originalLeftGroupWidth = leftButtonGroup.ActualWidth;
+            originalRightGroupWidth = rightButtonGroup.ActualWidth;
+            
+            // Add SizeChanged handler to implement custom sizing logic
+            this.SizeChanged += MainWindow_SizeChanged;
+        };
+    }
+    
+    private void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        double availableWidth = mainGrid.ActualWidth;
+        double minRequiredWidth = originalLeftGroupWidth + originalRightGroupWidth;
+        
+        // Behavior 1: When there's enough space, keep buttons at original size
+        // and put space between them
+        if (availableWidth >= minRequiredWidth)
+        {
+            leftButtonGroup.Width = originalLeftGroupWidth;
+            rightButtonGroup.Width = originalRightGroupWidth;
+            // The middle column (*) automatically gets remaining space
+        }
+        // Behavior 2: When space is tight, shrink buttons uniformly
+        else
+        {
+            double ratio = availableWidth / minRequiredWidth;
+            leftButtonGroup.Width = originalLeftGroupWidth * ratio;
+            rightButtonGroup.Width = originalRightGroupWidth * ratio;
+        }
+    }
+}
