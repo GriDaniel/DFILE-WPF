@@ -1,22 +1,20 @@
-<Grid Name="mainGrid">
-    <Grid.ColumnDefinitions>
-        <ColumnDefinition Width="Auto" />
-        <ColumnDefinition Width="*" MinWidth="0" />
-        <ColumnDefinition Width="Auto" />
-    </Grid.ColumnDefinitions>
-    
-    <StackPanel Grid.Column="0" Orientation="Horizontal" Name="leftButtonGroup">
-        <!-- Left side buttons -->
-        <Button Content="Button 1" Margin="2" />
-        <Button Content="Button 2" Margin="2" />
-    </StackPanel>
-    
-    <StackPanel Grid.Column="2" Orientation="Horizontal" Name="rightButtonGroup">
-        <!-- Right side buttons -->
-        <Button Content="Button 3" Margin="2" />
-        <Button Content="Button 4" Margin="2" />
-    </StackPanel>
-</Grid>
+<Grid Name="MainGrid" Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" Name="LeftButtonsColumn" MinWidth="0"/>
+            <ColumnDefinition Width="Auto" Name="SpacerColumn"/>
+            <ColumnDefinition Width="*" Name="RightButtonsColumn" MinWidth="0"/>
+        </Grid.ColumnDefinitions>
+
+        <UniformGrid Rows="1" Grid.Column="0" Name="LeftPanel" HorizontalAlignment="Stretch"/>
+
+        <Border Grid.Column="1" Name="TheSpacer"
+                Background="LightGray"
+                Width="80"
+                MinWidth="0"
+                HorizontalAlignment="Stretch" />
+
+        <UniformGrid Rows="1" Grid.Column="2" Name="RightPanel" HorizontalAlignment="Stretch"/>
+    </Grid>
 
 public partial class MainWindow : Window
 {
