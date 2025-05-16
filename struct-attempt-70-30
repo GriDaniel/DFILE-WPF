@@ -16,44 +16,55 @@
         <UniformGrid Rows="1" Grid.Column="2" Name="RightPanel" HorizontalAlignment="Stretch"/>
     </Grid>
 
-public partial class MainWindow : Window
-{
-    private double originalLeftGroupWidth;
-    private double originalRightGroupWidth;
-    
-    public MainWindow()
-    {
-        InitializeComponent();
-        
-        this.Loaded += (s, e) => {
-            // Store original sizes
-            originalLeftGroupWidth = leftButtonGroup.ActualWidth;
-            originalRightGroupWidth = rightButtonGroup.ActualWidth;
-            
-            // Add SizeChanged handler to implement custom sizing logic
-            this.SizeChanged += MainWindow_SizeChanged;
-        };
-    }
-    
-    private void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
-    {
-        double availableWidth = mainGrid.ActualWidth;
-        double minRequiredWidth = originalLeftGroupWidth + originalRightGroupWidth;
-        
-        // Behavior 1: When there's enough space, keep buttons at original size
-        // and put space between them
-        if (availableWidth >= minRequiredWidth)
+using System.Windows;
+using System.Windows.Controls;
+
+// Note: The user requested no namespace and no class declaration,
+// so this is the content that would go INSIDE MainWindow.xaml.cs
+
+        private const double IndividualButtonMinWidth = 60;
+        private const double DesiredSpacerWidth = 80;
+
+        public MainWindow()
         {
-            leftButtonGroup.Width = originalLeftGroupWidth;
-            rightButtonGroup.Width = originalRightGroupWidth;
-            // The middle column (*) automatically gets remaining space
+            InitializeComponent();
+            Loaded += MainWindow_Loaded;
         }
-        // Behavior 2: When space is tight, shrink buttons uniformly
-        else
+
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            double ratio = availableWidth / minRequiredWidth;
-            leftButtonGroup.Width = originalLeftGroupWidth * ratio;
-            rightButtonGroup.Width = originalRightGroupWidth * ratio;
+            string[] leftButtonLabels = { "Left 1", "Left 2" };
+            PopulateButtonGroup(LeftPanel, leftButtonLabels, LeftButtonsColumn);
+
+            string[] rightButtonLabels = { "Right A", "Right B", "Right C" };
+            PopulateButtonGroup(RightPanel, rightButtonLabels, RightButtonsColumn);
+
+            TheSpacer.Width = DesiredSpacerWidth;
+            TheSpacer.MinWidth = 0;
         }
-    }
-}
+
+        private void PopulateButtonGroup(UniformGrid panel, string[] labels, ColumnDefinition column)
+        {
+            panel.Children.Clear();
+            double totalMinWidthForGroup = 0;
+
+            foreach (var label in labels)
+            {
+                Button btn = new Button
+                {
+                    Content = label,
+                    Padding = new Thickness(10, 5),
+                    MinWidth = IndividualButtonMinWidth,
+                    HorizontalAlignment = HorizontalAlignment.Stretch,
+                    VerticalAlignment = VerticalAlignment.Stretch
+                };
+                panel.Children.Add(btn);
+                totalMinWidthForGroup += IndividualButtonMinWidth;
+            }
+
+            if (panel.Children.Count > 0)
+            {
+            }
+            column.MinWidth = totalMinWidthForGroup;
+        }
+// End of content for MainWindow.xaml.cs
